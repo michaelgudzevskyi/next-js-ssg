@@ -1,22 +1,9 @@
 import React from "react";
-import type { NextPage } from "next";
+import type { GetServerSideProps } from "next";
 
 import styles from "../styles/Home.module.css";
 
-const Home: NextPage = () => {
-  const [repositories, setRepositories] = React.useState<string[]>([]);
-
-  React.useEffect(() => {
-    (async () => {
-      const responce = await fetch(
-        "https://api.github.com/users/michaelgudzevskyi/repos"
-      );
-      const data = await responce.json();
-      console.log(data);
-      setRepositories(data.map((item: any) => item.name));
-    })();
-  }, []);
-
+export const Home = ({ repositories }: { repositories: string[] }) => {
   return (
     <div className={styles.container}>
       <ul>
@@ -26,6 +13,19 @@ const Home: NextPage = () => {
       </ul>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const responce = await fetch(
+    "https://api.github.com/users/michaelgudzevskyi/repos"
+  );
+  const data = await responce.json();
+  const repositories = data.map((repo: any) => repo.name);
+  return {
+    props: {
+      repositories,
+    },
+  };
 };
 
 export default Home;
