@@ -1,5 +1,5 @@
+import { GetStaticProps } from "next/types";
 import React from "react";
-import type { GetServerSideProps } from "next";
 
 import styles from "../styles/Home.module.css";
 
@@ -15,7 +15,7 @@ export const Home = ({ repositories }: { repositories: string[] }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const responce = await fetch(
     "https://api.github.com/users/michaelgudzevskyi/repos"
   );
@@ -25,6 +25,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     props: {
       repositories,
     },
+    revalidate: 5,
   };
 };
 
